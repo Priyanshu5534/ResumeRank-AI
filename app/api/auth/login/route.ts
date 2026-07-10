@@ -2,31 +2,27 @@ import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { generateToken } from '@/lib/jwt';
-import { registerSchema } from '@/lib/validations/auth';
+import { loginSchema } from '@/lib/validations/auth';
 import { successResponse, errorResponse, validationError } from '@/lib/api-response';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const result = registerSchema.safeParse(body);
+    const result = loginSchema.safeParse(body);
     if (!result.success) return validationError(result.error.issues);
 
-    const { name, email, password } = result.data;
+    const { email, password } = result.data;
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return errorResponse('Invalid email or password', 401);
 
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) return errorResponse('An account with this email already exists', 409);
-
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword },
-    });
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) return errorResponse('Invalid email or password', 401);
 
     const token = generateToken({ id: user.id, email: user.email, role: user.role });
 
     const response = successResponse(
       { id: user.id, name: user.name, email: user.email, role: user.role },
-      'Account created successfully',
-      201
+      'Login successful'
     );
     
     // Set cookie
@@ -40,7 +36,7 @@ export async function POST(request: NextRequest) {
     
     return response;
   } catch (error) {
-    console.error('[REGISTER]', error);
+    console.error('[LOGIN]', error);
     return errorResponse('Internal server error');
   }
 }

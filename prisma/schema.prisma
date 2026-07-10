@@ -7,81 +7,186 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ─── Models ────────────────────────────────────────────────────────────────
+
 model User {
   id       String @id @default(cuid())
   name     String
   email    String @unique
   password String
   role     Role   @default(RECRUITER)
+  avatar   String?
+  company  String?
+  title    String?
 
-  jobs Job[]
+  jobs          Job[]
+  activityLogs  ActivityLog[]
+  notifications Notification[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Job {
-  id          String @id @default(cuid())
-  title       String
-  description String
-  skills      String
-  experience  Int
-  location    String
-  salary      String
-  status      String @default("OPEN")
+  id             String    @id @default(cuid())
+  title          String
+  description    String    @db.Text
+  skills         String    @db.Text // comma-separated skill list
+  experience     Int       @default(0)
+  location       String
+  salary         String?
+  status         JobStatus @default(OPEN)
+  education      String?
+  employmentType String?   @default("FULL_TIME")
+  department     String?
+  closingDate    DateTime?
 
   recruiterId String
   recruiter   User   @relation(fields: [recruiterId], references: [id])
 
-  candidates Candidate[]
+  candidates   Candidate[]
+  activityLogs ActivityLog[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Candidate {
-  id    String @id @default(cuid())
-  name  String
-  email String @unique
-  phone String
+  id              String          @id @default(cuid())
+  name            String
+  email           String
+  phone           String?
+  status          CandidateStatus @default(APPLIED)
+  notes           String?         @db.Text
+  linkedin        String?
+  portfolio       String?
+  address         String?
+  avatarUrl       String?
+  interviewStatus String?
 
   jobId String
   job   Job    @relation(fields: [jobId], references: [id])
 
-  resume Resume?
+  resume     Resume?
+  interviews Interview[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([email, jobId])
+}
+
+model Resume {
+  id          String  @id @default(cuid())
+  fileName    String
+  fileUrl     String?
+  rawText     String? @db.Text
+  parsedData  Json?
+  contentType String?
+  fileSize    Int?
+
+  candidateId String    @unique
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  analysis ResumeAnalysis?
+
+  uploadedAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ResumeAnalysis {
+  id              String @id @default(cuid())
+  overallScore    Float  @default(0)
+  skillMatch      Float  @default(0)
+  experienceMatch Float  @default(0)
+  educationMatch  Float  @default(0)
+  keywordMatch    Float  @default(0)
+  matchedSkills   String @db.Text
+  missingSkills   String @db.Text
+  strengths       String @db.Text
+  weaknesses      String @db.Text
+  suggestions     String @db.Text
+  summary         String @db.Text
+  rank            Int?
+  aiModel         String @default("gemini-2.5-flash")
+
+  resumeId String @unique
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Resume {
-  id       String @id @default(cuid())
-  fileName String
-  fileUrl  String
+model Interview {
+  id          String          @id @default(cuid())
+  title       String
+  scheduledAt DateTime
+  notes       String?         @db.Text
+  status      InterviewStatus @default(SCHEDULED)
+  type        String          @default("VIDEO")
+  location    String?
 
-  candidateId String    @unique
-  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
 
-  analysis ResumeAnalysis?
-
-  uploadedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model ResumeAnalysis {
-  id String @id @default(cuid())
+model ActivityLog {
+  id          String  @id @default(cuid())
+  action      String
+  entity      String
+  entityId    String?
+  description String
+  metadata    Json?
 
-  overallScore  Float
-  matchedSkills String
-  missingSkills String
-  summary       String
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  resumeId String @unique
-  resume   Resume @relation(fields: [resumeId], references: [id])
+  jobId String?
+  job   Job?    @relation(fields: [jobId], references: [id])
 
   createdAt DateTime @default(now())
 }
 
+model Notification {
+  id      String  @id @default(cuid())
+  title   String
+  message String
+  type    String  @default("INFO")
+  read    Boolean @default(false)
+  link    String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// ─── Enums ─────────────────────────────────────────────────────────────────
+
 enum Role {
   RECRUITER
   ADMIN
+}
+
+enum JobStatus {
+  OPEN
+  CLOSED
+  DRAFT
+}
+
+enum CandidateStatus {
+  APPLIED
+  SHORTLISTED
+  INTERVIEW
+  SELECTED
+  REJECTED
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
 }
