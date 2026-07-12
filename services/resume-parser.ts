@@ -5,10 +5,22 @@ export async function extractTextFromBuffer(
   mimeType: string
 ): Promise<string> {
   if (mimeType === 'application/pdf' || mimeType.includes('pdf')) {
-    const pdfMod: any = await import('pdf-parse');
-    const pdfParse = pdfMod.default || pdfMod;
-    const data = await pdfParse(buffer);
-    return data.text;
+    try {
+      const PDFParserMod: any = await import('pdf2json');
+      const PDFParser = PDFParserMod.default || PDFParserMod;
+      const text = await new Promise<string>((resolve, reject) => {
+        const pdfParser = new PDFParser(null, 1);
+        pdfParser.on('pdfParser_dataError', (errData: any) => reject(errData.parserError));
+        pdfParser.on('pdfParser_dataReady', () => {
+          resolve(pdfParser.getRawTextContent());
+        });
+        pdfParser.parseBuffer(buffer);
+      });
+      return text;
+    } catch (err) {
+      console.warn('PDF parsing fallback applied:', err);
+      return buffer.toString('utf-8').replace(/[^\x20-\x7E\n]/g, ' ');
+    }
   }
 
   if (

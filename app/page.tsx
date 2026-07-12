@@ -25,7 +25,13 @@ export default function LandingPage() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/showcase"
+              className="bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 text-sm font-semibold px-3.5 py-2 rounded-xl transition duration-150"
+            >
+              LinkedIn Demo
+            </Link>
             <Link
               href="/login"
               className="text-sm font-semibold text-slate-300 hover:text-white transition"

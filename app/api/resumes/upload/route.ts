@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthPayload } from '@/lib/auth';
-import { extractTextFromBuffer } from '@/services/resume-parser';
+import { extractTextFromBuffer, extractBasicInfo } from '@/services/resume-parser';
 import { parseResumeWithAI } from '@/services/ai';
 import { successResponse, errorResponse, unauthorizedError } from '@/lib/api-response';
 
@@ -30,7 +30,8 @@ export async function POST(request: NextRequest) {
       return errorResponse('Candidate not found', 404);
     }
 
-    // Validate file type
+    // Validate file type (case-insensitive)
+    const fileNameLower = file.name.toLowerCase();
     const allowedTypes = [
       'application/pdf',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -38,9 +39,9 @@ export async function POST(request: NextRequest) {
     ];
     if (
       !allowedTypes.includes(file.type) &&
-      !file.name.endsWith('.pdf') &&
-      !file.name.endsWith('.docx') &&
-      !file.name.endsWith('.txt')
+      !fileNameLower.endsWith('.pdf') &&
+      !fileNameLower.endsWith('.docx') &&
+      !fileNameLower.endsWith('.txt')
     ) {
       return errorResponse('Invalid file type. Please upload a PDF, DOCX, or TXT file.', 400);
     }
@@ -53,15 +54,26 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
     
     // Extract text from buffer
-    const mimeType = file.type || (file.name.endsWith('.pdf') ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    const mimeType = fileNameLower.endsWith('.pdf')
+      ? 'application/pdf'
+      : fileNameLower.endsWith('.txt')
+      ? 'text/plain'
+      : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     const rawText = await extractTextFromBuffer(buffer, mimeType);
 
     // Call Gemini to parse resume structure
-    let parsedData = null;
+    let parsedData: any = null;
     try {
       parsedData = await parseResumeWithAI(rawText);
     } catch (aiErr) {
       console.warn('AI Parsing failed, using basic extraction:', aiErr);
+    }
+
+    if (!parsedData || Object.keys(parsedData).length === 0) {
+      parsedData = {
+        ...extractBasicInfo(rawText),
+        summary: rawText.slice(0, 300),
+      };
     }
 
     // Save to Database
