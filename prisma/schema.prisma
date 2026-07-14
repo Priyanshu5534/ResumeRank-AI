@@ -108,7 +108,7 @@ model ResumeAnalysis {
   suggestions     String @db.Text
   summary         String @db.Text
   rank            Int?
-  aiModel         String @default("gemini-2.5-flash")
+  aiModel         String @default("ResumeRank AI (BGE Fine-Tuned)")
 
   resumeId String @unique
   resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)

@@ -4,19 +4,19 @@ San Francisco, CA | elena.rostova@techmail.io | +1 (415) 890-2134
 LinkedIn: https://linkedin.com/in/elena-rostova-ai
 
 PROFESSIONAL SUMMARY
-Senior/Staff Full Stack Engineer with 8+ years of production architectural experience building scalable web applications, real-time AI pipelines, and enterprise design systems. Deep expertise in React 19, Next.js App Router, TypeScript, Node.js, Prisma, PostgreSQL, and Google Gemini AI integration.
+Senior/Staff Full Stack Engineer with 8+ years of production architectural experience building scalable web applications, real-time AI pipelines, and enterprise design systems. Deep expertise in React 19, Next.js App Router, TypeScript, Node.js, Prisma, PostgreSQL, and SentenceTransformer BGE AI integration.
 
 TECHNICAL SKILLS
 - Core Frontend: React 19, Next.js App Router, TypeScript, Tailwind CSS, Framer Motion
 - Backend & DB: Node.js, Express, Next.js Server Actions, Prisma ORM, PostgreSQL, Redis
-- AI & ML Integration: Google Gemini API, Prompt Engineering, Structured JSON Parsing
+- AI & ML Integration: SentenceTransformers, BGE Embedding Models, Multi-Factor ATS Scoring
 - DevOps & Cloud: Vercel, Docker, AWS, CI/CD Pipelines, Playwright Automation
 
 PROFESSIONAL EXPERIENCE
 
 Staff Full Stack Engineer | NovaCloud AI Systems (2022 – Present)
 - Architected and led the development of a real-time analytics suite using Next.js 16 and React Server Components, serving over 4.5M monthly active users.
-- Designed automated AI data processing pipelines integrating Google Gemini APIs, reducing manual review latency by 94%.
+- Designed automated AI data processing pipelines integrating local fine-tuned BGE models, reducing manual review latency by 94%.
 - Spearheaded company-wide frontend design tokens and Tailwind CSS system, cutting UI bug regressions by 65%.
 - Mentored a team of 12 full-stack and frontend engineers across North America and Europe.
 
@@ -29,4 +29,4 @@ B.S. in Computer Science | University of California, Berkeley (2015 – 2019)
 Graduated Magna Cum Laude
 
 CERTIFICATIONS
-- Google Cloud Certified Professional Cloud Architect
+- Certified AI & Cloud Systems Architect

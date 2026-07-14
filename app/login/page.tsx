@@ -39,44 +39,6 @@ export default function LoginPage() {
     }
   }
 
-  async function fillDemoAndLogin() {
-    setEmail('demo@resumerank.ai');
-    setPassword('demo123456');
-    // auto register/login demo user
-    setLoading(true);
-    try {
-      // First try login
-      let res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'demo@resumerank.ai', password: 'demo123456' }),
-      });
-      if (!res.ok) {
-        // Create demo account if it doesn't exist yet
-        res = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: 'Alex Rivera (Demo Recruiter)',
-            email: 'demo@resumerank.ai',
-            password: 'demo123456',
-          }),
-        });
-      }
-
-      if (res.ok) {
-        toast.success('Signed in as Demo Recruiter!');
-        router.push('/dashboard');
-        router.refresh();
-      } else {
-        toast.error('Could not sign in demo account.');
-      }
-    } catch {
-      toast.error('Demo sign in failed.');
-    } finally {
-      setLoading(false);
-    }
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
@@ -123,30 +85,7 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        {/* Quick Demo button */}
-        <div className="pt-2">
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200 dark:border-slate-800" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white dark:bg-slate-900 px-2 text-slate-400 font-semibold">
-                Instant Testing
-              </span>
-            </div>
-          </div>
 
-          <Button
-            type="button"
-            variant="outline"
-            loading={loading}
-            onClick={fillDemoAndLogin}
-            className="w-full flex items-center justify-center gap-2 border-dashed border-blue-300 dark:border-blue-800 text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-950/20"
-          >
-            <Sparkles className="w-4 h-4" />
-            1-Click Demo Recruiter Login
-          </Button>
-        </div>
 
         {/* Register redirect link */}
         <p className="text-center text-xs text-slate-500">

@@ -67,10 +67,7 @@ export const DEPARTMENTS = [
 ] as const;
 
 export const AI_MODELS = [
-  { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash (Default)', provider: 'Google' },
-  { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash', provider: 'Google' },
-  { value: 'gpt-4o', label: 'GPT-4o', provider: 'OpenAI' },
-  { value: 'gpt-4.1', label: 'GPT-4.1', provider: 'OpenAI' },
+  { value: 'ResumeRank AI (BGE Fine-Tuned)', label: 'ResumeRank AI (BGE Fine-Tuned - Default)', provider: 'Local Custom Model' },
 ] as const;
 
 export const ITEMS_PER_PAGE = 10;

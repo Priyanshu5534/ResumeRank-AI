@@ -5,7 +5,7 @@ import { extractTextFromBuffer, extractBasicInfo } from '@/services/resume-parse
 import { parseResumeWithAI } from '@/services/ai';
 import { successResponse, errorResponse, unauthorizedError } from '@/lib/api-response';
 
-export const maxDuration = 60; // Allow enough time for PDF parsing + Gemini calls
+export const maxDuration = 60; // Allow enough time for PDF parsing and local NLP extraction
 
 export async function POST(request: NextRequest) {
   try {
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     const rawText = await extractTextFromBuffer(buffer, mimeType);
 
-    // Call Gemini to parse resume structure
+    // Call local AI parser to extract structured information
     let parsedData: any = null;
     try {
       parsedData = await parseResumeWithAI(rawText);

@@ -35,7 +35,7 @@ export async function POST(
     const candidate = resume.candidate;
     const job = candidate.job;
 
-    // Call Gemini API to evaluate candidate resume against job description
+    // Call AI engine to evaluate candidate resume against job description
     const evaluation = await evaluateResume(
       resume.rawText,
       job.title,
@@ -61,7 +61,7 @@ export async function POST(
         weaknesses: evaluation.weaknesses.join(' | '),
         suggestions: evaluation.suggestions.join(' | '),
         summary: evaluation.summary,
-        aiModel: process.env.AI_MODEL || 'gemini-2.5-flash',
+        aiModel: evaluation.aiModel || process.env.AI_MODEL || 'ResumeRank AI (BGE Fine-Tuned)',
       },
       update: {
         overallScore: evaluation.overallScore,
@@ -75,7 +75,7 @@ export async function POST(
         weaknesses: evaluation.weaknesses.join(' | '),
         suggestions: evaluation.suggestions.join(' | '),
         summary: evaluation.summary,
-        aiModel: process.env.AI_MODEL || 'gemini-2.5-flash',
+        aiModel: evaluation.aiModel || process.env.AI_MODEL || 'ResumeRank AI (BGE Fine-Tuned)',
       },
     });
 

@@ -25,13 +25,7 @@ export default function LandingPage() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-3">
-            <Link
-              href="/showcase"
-              className="bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 text-sm font-semibold px-3.5 py-2 rounded-xl transition duration-150"
-            >
-              LinkedIn Demo
-            </Link>
+          <div className="flex items-center gap-4">
             <Link
               href="/login"
               className="text-sm font-semibold text-slate-300 hover:text-white transition"
@@ -62,13 +56,11 @@ export default function LandingPage() {
 
             <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.08] text-white">
               Rank & Evaluate Resumes <br className="hidden md:inline" />
-              with <span className="text-blue-500">Google Gemini AI</span>
+              with <span className="text-blue-500">Custom BGE AI Model</span>
             </h1>
 
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 font-normal leading-relaxed">
-              Transform your recruitment workflow. Upload candidate resumes, let AI analyze skill
-              alignment against your job requirements, and instantly rank top talent on an automated
-              leaderboard.
+              Powered by a custom fine-tuned BGE embedding model for semantic resume-job matching. Transform your recruitment workflow by evaluating candidate skills and instantly ranking top talent on an automated leaderboard.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
@@ -79,18 +71,12 @@ export default function LandingPage() {
                 Launch Recruiter Portal
                 <ArrowRight className="w-5 h-5" />
               </Link>
-              <Link
-                href="/login"
-                className="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-base px-8 py-4 rounded-xl border border-slate-800 transition"
-              >
-                Try 1-Click Demo Account
-              </Link>
             </div>
 
             {/* Feature highlights badge pill row */}
             <div className="pt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs font-medium text-slate-400">
               <span className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Powered by Gemini 2.5 Flash
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Powered by ResumeRank AI (BGE)
               </span>
               <span className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Automatic PDF/DOCX Parsing
@@ -128,7 +114,7 @@ export default function LandingPage() {
               {
                 icon: Sparkles,
                 title: 'AI Evaluation & Scoring',
-                desc: 'Gemini evaluates every candidate against the job description to output overall match scores, missing skills, strengths, and suggestions.',
+                desc: 'Our custom fine-tuned BGE embedding model evaluates every candidate against the job description to output overall match scores, missing skills, strengths, and suggestions.',
               },
               {
                 icon: TrendingUp,

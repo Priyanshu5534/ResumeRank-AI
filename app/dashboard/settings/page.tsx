@@ -120,14 +120,14 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
             <div>
               <p className="text-sm font-bold text-slate-850 dark:text-slate-100">
-                Active Generative AI Provider
+                Active AI Evaluation Engine
               </p>
               <p className="text-xs text-slate-500 mt-0.5">
-                Powered by Google Gemini Large Language Model
+                Powered by Custom Fine-Tuned BGE SentenceTransformer Model
               </p>
             </div>
             <Badge variant="success" className="px-3 py-1 text-xs">
-              Gemini 2.5 Flash • Active
+              ResumeRank AI • Active
             </Badge>
           </div>
 
@@ -136,10 +136,10 @@ export default function SettingsPage() {
               <Key className="w-5 h-5 text-emerald-500" />
               <div>
                 <p className="text-sm font-bold text-slate-850 dark:text-slate-100">
-                  GEMINI_API_KEY Connection
+                  LOCAL_MODEL_PATH & Endpoint
                 </p>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Environment key loaded via server-side secure env configuration
+                  Multi-factor semantic ATS scoring server (http://localhost:8000/evaluate)
                 </p>
               </div>
             </div>
